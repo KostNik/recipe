@@ -20,7 +20,6 @@ public class UnitOfMeasureRepositoryIT {
     @Resource //or Autowire
     private UnitOfMeasureRepository repository;
 
-
     @Test
     public void testTeaspoon() {
         Optional<UnitOfMeasure> teaspoon = repository.findByDescription("Teaspoon");
