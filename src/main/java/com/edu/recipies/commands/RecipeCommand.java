@@ -1,14 +1,9 @@
-package com.edu.recipies.command;
+package com.edu.recipies.commands;
 
-import com.edu.recipies.model.Category;
 import com.edu.recipies.model.Difficulty;
-import com.edu.recipies.model.Ingredient;
-import com.edu.recipies.model.Notes;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 

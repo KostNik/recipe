@@ -1,4 +1,4 @@
-package com.edu.recipies.command;
+package com.edu.recipies.commands;
 
 import lombok.Getter;
 import lombok.Setter;

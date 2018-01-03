@@ -1,7 +1,6 @@
-package com.edu.recipies.command;
+package com.edu.recipies.commands;
 
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +10,5 @@ public class NotesCommand {
 
     private Long id;
     private String recipeNotes;
-    private RecipeCommand recipeCommand;
 
 }

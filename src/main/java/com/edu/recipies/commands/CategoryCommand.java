@@ -1,4 +1,4 @@
-package com.edu.recipies.command;
+package com.edu.recipies.commands;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +12,5 @@ public class CategoryCommand {
 
     private Long id;
     private String description;
-    private Set<RecipeCommand> recipes = new HashSet<>();
 
 }
