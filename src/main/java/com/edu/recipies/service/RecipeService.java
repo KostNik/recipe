@@ -1,5 +1,6 @@
 package com.edu.recipies.service;
 
+import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.model.Recipe;
 
 import java.util.Optional;
@@ -10,5 +11,7 @@ public interface RecipeService {
     Set<Recipe> getRecipes();
 
     Optional<Recipe> findById(Long id);
+
+    Optional<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand);
 
 }

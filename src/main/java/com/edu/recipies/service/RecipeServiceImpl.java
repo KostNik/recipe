@@ -1,5 +1,8 @@
 package com.edu.recipies.service;
 
+import com.edu.recipies.comandConverters.fromCommands.CommandToRecipe;
+import com.edu.recipies.comandConverters.toCommands.RecipeToCommand;
+import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.repository.RecipeRepository;
 import com.google.common.collect.ImmutableSet;
@@ -12,8 +15,16 @@ import java.util.Set;
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final CommandToRecipe  commandToRecipe;
+    private final RecipeToCommand  recipeToCommand;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository) {this.recipeRepository = recipeRepository;}
+    public RecipeServiceImpl(RecipeRepository recipeRepository,
+                             CommandToRecipe commandToRecipe,
+                             RecipeToCommand recipeToCommand) {
+        this.recipeRepository = recipeRepository;
+        this.commandToRecipe = commandToRecipe;
+        this.recipeToCommand = recipeToCommand;
+    }
 
 
     @Override
@@ -24,5 +35,13 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Optional<Recipe> findById(Long id) {
         return recipeRepository.findById(id);
+    }
+
+    @Override
+    public Optional<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand) {
+        Recipe recipe = commandToRecipe.convert(recipeCommand);
+        Recipe saved = recipeRepository.save(recipe);
+        RecipeCommand savedRecipeCommand = recipeToCommand.convert(saved);
+        return Optional.ofNullable(savedRecipeCommand);
     }
 }

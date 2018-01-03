@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
+import static com.edu.recipies.RecipeUtils.isValidCollection;
+
 @Component
 public class CommandToRecipe implements Converter<RecipeCommand, Recipe> {
 
@@ -58,10 +60,6 @@ public class CommandToRecipe implements Converter<RecipeCommand, Recipe> {
         }
 
         return recipe;
-    }
-
-    private boolean isValidCollection(Collection collection) {
-        return collection != null && !collection.isEmpty();
     }
 
 
