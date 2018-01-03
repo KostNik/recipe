@@ -5,6 +5,7 @@ import com.edu.recipies.repository.RecipeRepository;
 import com.google.common.collect.ImmutableSet;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -18,5 +19,10 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Set<Recipe> getRecipes() {
         return ImmutableSet.copyOf(recipeRepository.findAll());
+    }
+
+    @Override
+    public Optional<Recipe> findById(Long id) {
+        return recipeRepository.findById(id);
     }
 }
