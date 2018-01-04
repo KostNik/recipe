@@ -1,11 +1,16 @@
 package com.edu.recipies.controller;
 
+import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.Optional;
 
 @Controller
 public class RecipeController {
@@ -18,9 +23,27 @@ public class RecipeController {
     }
 
 
-    @RequestMapping("recipe/show/{id}")
+    @RequestMapping(value = "recipe/show/{id}", method = RequestMethod.GET)
     public String showRecipe(@PathVariable long id, Model model) {
         recipeService.findById(id).ifPresent(r -> model.addAttribute("recipe", r));
         return "recipe/show";
     }
+
+
+    @RequestMapping(value = "recipe/new", method = RequestMethod.GET)
+    public String newRecipeForm(Model model) {
+        model.addAttribute("recipe", new RecipeCommand());
+        return "recipe/recipeForm";
+    }
+
+
+    @RequestMapping(value = "recipe", method = RequestMethod.POST)
+    public String handleRecipeForm(@ModelAttribute RecipeCommand recipeCommand) {
+        Optional<RecipeCommand> recipeCommandSaved = recipeService.saveRecipeCommand(recipeCommand);
+        return recipeCommandSaved
+                .map(command -> "redirect:/recipe/show/" + command.getId())
+                .orElse("recipe/recipeForm");
+    }
+
+
 }

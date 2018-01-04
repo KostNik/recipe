@@ -14,4 +14,7 @@ public interface RecipeService {
 
     Optional<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand);
 
+    Optional<RecipeCommand> findCommandById(Long id);
+
+
 }

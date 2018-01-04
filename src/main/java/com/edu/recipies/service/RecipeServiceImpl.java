@@ -44,4 +44,9 @@ public class RecipeServiceImpl implements RecipeService {
         RecipeCommand savedRecipeCommand = recipeToCommand.convert(saved);
         return Optional.ofNullable(savedRecipeCommand);
     }
+
+    @Override
+    public Optional<RecipeCommand> findCommandById(Long id) {
+        return Optional.empty();
+    }
 }
