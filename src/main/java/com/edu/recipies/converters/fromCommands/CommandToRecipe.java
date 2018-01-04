@@ -1,4 +1,4 @@
-package com.edu.recipies.comandConverters.fromCommands;
+package com.edu.recipies.converters.fromCommands;
 
 import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.model.Recipe;
@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-
-import java.util.Collection;
 
 import static com.edu.recipies.RecipeUtils.isValidCollection;
 

@@ -1,6 +1,6 @@
 package com.edu.recipies.service;
 
-import com.edu.recipies.comandConverters.toCommands.RecipeToCommand;
+import com.edu.recipies.converters.toCommands.RecipeToCommand;
 import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.repository.RecipeRepository;
@@ -41,6 +41,5 @@ public class RecipeServiceIT {
         assertEquals(recipe.getCategories().size(), savedRecipeCommand.get().getCategories().size());
         assertEquals(recipe.getIngredients().size(), savedRecipeCommand.get().getIngredients().size());
     }
-
 
 }

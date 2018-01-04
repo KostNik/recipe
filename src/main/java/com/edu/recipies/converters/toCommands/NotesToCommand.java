@@ -1,9 +1,7 @@
-package com.edu.recipies.comandConverters.toCommands;
+package com.edu.recipies.converters.toCommands;
 
 import com.edu.recipies.commands.NotesCommand;
-import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.model.Notes;
-import com.edu.recipies.model.Recipe;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;

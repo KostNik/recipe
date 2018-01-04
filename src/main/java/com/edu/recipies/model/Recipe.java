@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -47,12 +48,15 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
-        notes.setRecipe(this);
+        if (Objects.nonNull(notes))
+            notes.setRecipe(this);
     }
 
     public void addIngredient(Ingredient ingredient) {
-        ingredients.add(ingredient);
-        ingredient.setRecipe(this);
+        if (Objects.nonNull(ingredient)) {
+            ingredients.add(ingredient);
+            ingredient.setRecipe(this);
+        }
     }
 
 }

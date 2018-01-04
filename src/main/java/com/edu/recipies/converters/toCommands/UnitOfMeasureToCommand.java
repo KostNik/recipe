@@ -1,28 +1,26 @@
-package com.edu.recipies.comandConverters.toCommands;
+package com.edu.recipies.converters.toCommands;
 
-import com.edu.recipies.commands.CategoryCommand;
-import com.edu.recipies.model.Category;
+import com.edu.recipies.commands.UnitOfMeasureCommand;
+import com.edu.recipies.model.UnitOfMeasure;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CategoryToCommand implements Converter<Category, CategoryCommand> {
+public class UnitOfMeasureToCommand implements Converter<UnitOfMeasure, UnitOfMeasureCommand> {
 
 
     @Nullable
     @Override
     @Synchronized
-    public CategoryCommand convert(Category source) {
+    public UnitOfMeasureCommand convert(UnitOfMeasure source) {
         if (source == null) {
             return null;
         }
-        final CategoryCommand command = new CategoryCommand();
+        final UnitOfMeasureCommand command = new UnitOfMeasureCommand();
         command.setId(source.getId());
         command.setDescription(source.getDescription());
         return command;
     }
-
-
 }

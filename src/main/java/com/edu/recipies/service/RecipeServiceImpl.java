@@ -1,7 +1,7 @@
 package com.edu.recipies.service;
 
-import com.edu.recipies.comandConverters.fromCommands.CommandToRecipe;
-import com.edu.recipies.comandConverters.toCommands.RecipeToCommand;
+import com.edu.recipies.converters.fromCommands.CommandToRecipe;
+import com.edu.recipies.converters.toCommands.RecipeToCommand;
 import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.repository.RecipeRepository;

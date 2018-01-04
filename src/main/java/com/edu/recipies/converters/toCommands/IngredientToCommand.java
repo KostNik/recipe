@@ -1,4 +1,4 @@
-package com.edu.recipies.comandConverters.toCommands;
+package com.edu.recipies.converters.toCommands;
 
 import com.edu.recipies.commands.IngredientCommand;
 import com.edu.recipies.model.Ingredient;
