@@ -17,7 +17,7 @@ public class StartPageController {
     private final RecipeService recipeService;
 
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @RequestMapping(value = {"/all", "/"}, method = RequestMethod.GET)
     public String getAllRecipes(Model model) {
         model.addAttribute("recipes", recipeService.getRecipes());
         return "index";

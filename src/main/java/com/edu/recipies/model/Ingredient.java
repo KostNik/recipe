@@ -1,5 +1,6 @@
 package com.edu.recipies.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"description", "amount", "unitOfMeasure"})
 public class Ingredient {
 
 
@@ -40,7 +42,6 @@ public class Ingredient {
         this.recipe = recipe;
         this.unitOfMeasure = unitOfMeasure;
     }
-
 
 
 }
