@@ -30,9 +30,9 @@ public class IngredientRepositoryTest {
     public void testFindByRecipeIdAndIngredientId() {
         Recipe recipe = new Recipe();
 
-        Ingredient ingredient_1 = new Ingredient();
-        Ingredient ingredient_2 = new Ingredient();
-        Ingredient ingredient_3 = new Ingredient();
+        Ingredient ingredient_1 = new Ingredient("one");
+        Ingredient ingredient_2 = new Ingredient("two");
+        Ingredient ingredient_3 = new Ingredient("three");
 
         recipe.addIngredient(ingredient_1);
         recipe.addIngredient(ingredient_2);
