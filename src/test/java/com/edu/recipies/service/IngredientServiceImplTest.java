@@ -71,6 +71,12 @@ public class IngredientServiceImplTest {
         assertEquals(Long.valueOf(3L), savedCommand.get().getId());
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, times(1)).save(any(Recipe.class));
-
     }
+
+    @Test
+    public void testDeleteIngredientByID() {
+        ingredientService.deleteIngredient(anyLong());
+        verify(ingredientRepository, times(1)).deleteById(anyLong());
+    }
+
 }

@@ -9,6 +9,7 @@ import com.edu.recipies.service.RecipeService;
 import com.edu.recipies.service.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +97,13 @@ public class IngredientController {
     public String saveIngredientCommand(@PathVariable Long recipeId, @ModelAttribute IngredientCommand ingredientCommand) {
         Optional<IngredientCommand> optionalCommand = ingredientService.saveOrUpdateIngredient(ingredientCommand);
         return "redirect:/recipe/" + recipeId + "/ingredient/" + optionalCommand.get().getId() + "/show";
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping
+    @RequestMapping("/recipe/{recipeId}/ingredient/{ingredientId}")
+    public void saveIngredientCommand(@PathVariable Long recipeId, @PathVariable(value = "ingredientId") Long ingrId) {
+        Boolean deleteIngredientResult = ingredientService.deleteIngredient(ingrId);
     }
 
 

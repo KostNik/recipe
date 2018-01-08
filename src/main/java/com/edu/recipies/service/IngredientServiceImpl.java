@@ -87,4 +87,15 @@ public class IngredientServiceImpl implements IngredientService {
             }
         }
     }
+
+    @Override
+    public Boolean deleteIngredient(Long id) {
+        try {
+            ingredientRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

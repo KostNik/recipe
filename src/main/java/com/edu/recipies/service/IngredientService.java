@@ -9,4 +9,6 @@ public interface IngredientService {
     Optional<IngredientCommand> findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId);
 
     Optional<IngredientCommand> saveOrUpdateIngredient(IngredientCommand ingredientCommand);
+
+    Boolean deleteIngredient(Long id);
 }
