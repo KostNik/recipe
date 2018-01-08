@@ -7,6 +7,7 @@ import com.edu.recipies.model.Recipe;
 import com.edu.recipies.repository.RecipeRepository;
 import com.google.common.collect.ImmutableSet;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.Set;
@@ -54,4 +55,5 @@ public class RecipeServiceImpl implements RecipeService {
     public void deleteById(Long id) {
         recipeRepository.deleteById(id);
     }
+
 }
