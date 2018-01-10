@@ -4,17 +4,23 @@ import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.exceptions.NotFoundException;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.service.RecipeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
+@Slf4j
 @Controller
 public class RecipeController {
+
+    private final static String RECIPE_FORM_URL = "recipe/recipeForm";
 
     private final RecipeService recipeService;
 
@@ -34,23 +40,30 @@ public class RecipeController {
     @RequestMapping(value = "recipe/{id}/update", method = RequestMethod.GET)
     public String updateRecipe(@PathVariable Long id, Model model) {
         recipeService.findCommandById(id).ifPresent(r -> model.addAttribute("recipe", r));
-        return "recipe/recipeForm";
+        return RECIPE_FORM_URL;
     }
 
 
     @RequestMapping(value = "recipe/new", method = RequestMethod.GET)
     public String newRecipeForm(Model model) {
         model.addAttribute("recipe", new RecipeCommand());
-        return "recipe/recipeForm";
+        return RECIPE_FORM_URL;
     }
 
 
-    @RequestMapping(value = "recipe", method = RequestMethod.POST)
-    public String handleRecipeForm(@ModelAttribute RecipeCommand recipeCommand) {
+    @PostMapping("recipe")
+    public String handleRecipeForm(@Valid @ModelAttribute("recipe") RecipeCommand recipeCommand, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(e -> {
+                log.info("ERROR {}", e);
+            });
+            return RECIPE_FORM_URL;
+        }
         Optional<RecipeCommand> recipeCommandSaved = recipeService.saveRecipeCommand(recipeCommand);
         return recipeCommandSaved
                 .map(command -> "redirect:/recipe/" + command.getId() + "/show")
-                .orElse("recipe/recipeForm");
+                .orElse(RECIPE_FORM_URL);
     }
 
 

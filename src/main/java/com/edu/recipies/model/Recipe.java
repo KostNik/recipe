@@ -2,8 +2,13 @@ package com.edu.recipies.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -17,21 +22,18 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String  url;
-    private String  source;
-    private Integer servings;
-    private Integer cookTime;
-    private Integer prepTime;
-    private String  description;
-
+    private String     url;
+    private String     source;
+    private Integer    servings;
+    private Integer    cookTime;
+    private Integer    prepTime;
+    private String     description;
     @Lob
-    private String directions;
-
+    private String     directions;
     @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
-
     @Lob
-    private Byte[] image;
+    private Byte[]     image;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private Set<Ingredient> ingredients = new HashSet<>();
