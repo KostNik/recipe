@@ -37,19 +37,21 @@ public class ImageControllerTest {
     private ImageService imageService;
 
     private ImageController imageController;
+    private MockMvc         mockMvc;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         imageController = new ImageController(recipeService, imageService);
+        mockMvc = MockMvcBuilders.standaloneSetup(imageController)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
     public void testGetImageForm() throws Exception {
-        MockMvc build = MockMvcBuilders.standaloneSetup(imageController).build();
-
         when(recipeService.findCommandById(anyLong())).thenReturn(Optional.of(new RecipeCommand()));
-        build.perform(get("/recipe/1/imageform"))
+        mockMvc.perform(get("/recipe/1/imageform"))
                 .andExpect(model().attributeExists("recipe"))
                 .andExpect(status().isOk());
         verify(recipeService, times(1)).findCommandById(anyLong());
@@ -59,15 +61,20 @@ public class ImageControllerTest {
     public void testHandleImageForm() throws Exception {
         MockMultipartFile image = new MockMultipartFile("imagefile", "testFile", "image", "Test".getBytes());
 
-
-        MockMvc build = MockMvcBuilders.standaloneSetup(imageController).build();
-
-        build.perform(multipart("/recipe/1/image").file(image))
+        mockMvc.perform(multipart("/recipe/1/image").file(image))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/1/show"));
 
         verify(imageService, times(1)).saveImageFile(anyLong(), any());
 
+    }
+
+    @Test
+    public void testBadNumberFormatException() throws Exception {
+        mockMvc.perform(get("/recipe/someString/image"))
+                .andExpect(status().isBadRequest())
+                .andExpect(model().attributeExists("exception"))
+                .andExpect(view().name("400error"));
     }
 
     @Test
@@ -78,11 +85,9 @@ public class ImageControllerTest {
         Byte[] testArray = new Byte[]{12, 34, 56, 78, 2};
         recipeCommand.setImage(testArray);
 
-        MockMvc build = MockMvcBuilders.standaloneSetup(imageController).build();
         when(recipeService.findCommandById(anyLong())).thenReturn(Optional.of(recipeCommand));
 
-
-        MockHttpServletResponse response = build.perform(get("/recipe/3/image"))
+        MockHttpServletResponse response = mockMvc.perform(get("/recipe/3/image"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();

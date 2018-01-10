@@ -30,16 +30,17 @@ public class StartPageControllerTest {
     private Model model;
 
     private StartPageController startPageController;
+    private MockMvc             mockMvc;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         startPageController = new StartPageController(recipeService);
+        mockMvc = MockMvcBuilders.standaloneSetup(startPageController).build();
     }
 
     @Test
     public void testMockMVC() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(startPageController).build();
         mockMvc.perform(get("/all"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"));

@@ -44,17 +44,18 @@ public class IngredientControllerTest {
 
     @Mock
     private IngredientController ingredientController;
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         ingredientController = new IngredientController(recipeService, ingredientService, unitOfMeasureService);
+        mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
     }
 
 
     @Test
     public void testShowAllIngredients() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
         RecipeCommand value = new RecipeCommand();
         value.setId(1L);
         when(recipeService.findCommandById(anyLong())).thenReturn(Optional.of(value));
@@ -69,7 +70,6 @@ public class IngredientControllerTest {
 
     @Test
     public void testShowAllIngredientsWhenNoRecipe() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
         when(recipeService.findCommandById(anyLong())).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/recipe/1/ingredients"))
@@ -80,7 +80,6 @@ public class IngredientControllerTest {
 
     @Test
     public void testShowIngredients() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
         when(ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(Optional.of(new IngredientCommand()));
 
         mockMvc.perform(get("/recipe/1/ingredient/2/show"))
@@ -92,8 +91,6 @@ public class IngredientControllerTest {
 
     @Test
     public void testUpdateIngredientForm() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
-
         when(ingredientService.findByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(Optional.of(new IngredientCommand()));
         when(unitOfMeasureService.listAllUoms()).thenReturn(Sets.newSet());
 
@@ -107,8 +104,6 @@ public class IngredientControllerTest {
 
     @Test
     public void testNewIngredientForm() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
-
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId(3L);
 
@@ -126,7 +121,6 @@ public class IngredientControllerTest {
 
     @Test
     public void testSaveIngredientCommand() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
         IngredientCommand value = new IngredientCommand();
         value.setId(2L);
         when(ingredientService.saveOrUpdateIngredient(any(IngredientCommand.class))).thenReturn(Optional.of(value));
@@ -140,7 +134,6 @@ public class IngredientControllerTest {
 
     @Test
     public void testDeleteIngredient() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
         when(ingredientService.deleteIngredient(anyLong())).thenReturn(true);
 
         mockMvc.perform(delete("/recipe/1/ingredient/1"))

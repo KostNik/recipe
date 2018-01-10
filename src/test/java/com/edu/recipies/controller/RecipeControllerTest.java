@@ -34,17 +34,19 @@ public class RecipeControllerTest {
     private RecipeService recipeService;
 
     private RecipeController recipeController;
+    private MockMvc          mockMvc;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         recipeController = new RecipeController(recipeService);
+        mockMvc = MockMvcBuilders.standaloneSetup(recipeController)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
     public void testShowRecipe() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
-
         when(recipeService.findById(anyLong())).thenReturn(new Recipe());
 
         mockMvc.perform(get("/recipe/1/show"))
@@ -55,7 +57,6 @@ public class RecipeControllerTest {
 
     @Test
     public void testGetUpdateRecipeView() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
         when(recipeService.findCommandById(anyLong())).thenReturn(Optional.of(new RecipeCommand()));
         mockMvc.perform(get("/recipe/1/update"))
                 .andExpect(status().isOk())
@@ -65,7 +66,6 @@ public class RecipeControllerTest {
 
     @Test
     public void testGetNewRecipeForm() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
         mockMvc.perform(get("/recipe/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/recipeForm"))
@@ -78,7 +78,6 @@ public class RecipeControllerTest {
         recipeCommand.setId(7L);
         when(recipeService.saveRecipeCommand(any())).thenReturn(Optional.of(recipeCommand));
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
         mockMvc.perform(post("/recipe")
                 .param("id", "")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
@@ -88,8 +87,6 @@ public class RecipeControllerTest {
 
     @Test
     public void testNotFoundStatus() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
-
         when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/recipe/1/show"))
@@ -100,8 +97,6 @@ public class RecipeControllerTest {
 
     @Test
     public void testBadNumberFormatException() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
-
         mockMvc.perform(get("/recipe/someString/show"))
                 .andExpect(status().isBadRequest())
                 .andExpect(model().attributeExists("exception"))
@@ -110,8 +105,6 @@ public class RecipeControllerTest {
 
     @Test
     public void testDeleteRecipe() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
-
         mockMvc.perform(get("/recipe/delete?id=" + 1L))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/all"));
