@@ -1,6 +1,7 @@
 package com.edu.recipies.controller;
 
 import com.edu.recipies.commands.RecipeCommand;
+import com.edu.recipies.model.Recipe;
 import com.edu.recipies.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,8 @@ public class RecipeController {
 
     @RequestMapping(value = "recipe/{id}/show", method = RequestMethod.GET)
     public String showRecipe(@PathVariable long id, Model model) {
-        recipeService.findById(id).ifPresent(r -> model.addAttribute("recipe", r));
+        Recipe recipe = recipeService.findById(id);
+        model.addAttribute("recipe", recipe);
         return "recipe/show";
     }
 

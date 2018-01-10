@@ -3,6 +3,7 @@ package com.edu.recipies.service;
 import com.edu.recipies.converters.fromCommands.CommandToRecipe;
 import com.edu.recipies.converters.toCommands.RecipeToCommand;
 import com.edu.recipies.commands.RecipeCommand;
+import com.edu.recipies.exceptions.NotFoundException;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.repository.RecipeRepository;
 import com.google.common.collect.ImmutableSet;
@@ -34,8 +35,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Optional<Recipe> findById(Long id) {
-        return recipeRepository.findById(id);
+    public Recipe findById(Long id) {
+        return recipeRepository.findById(id).orElseThrow(() -> new NotFoundException("Recipe not found"));
     }
 
     @Override

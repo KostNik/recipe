@@ -3,6 +3,7 @@ package com.edu.recipies.service;
 import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.converters.fromCommands.CommandToRecipe;
 import com.edu.recipies.converters.toCommands.RecipeToCommand;
+import com.edu.recipies.exceptions.NotFoundException;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.repository.RecipeRepository;
 import org.junit.Before;
@@ -43,9 +44,9 @@ public class RecipeServiceImplTest {
     public void getRecipeById() {
         when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(new Recipe()));
 
-        Optional<Recipe> recipeReturned = recipeService.findById(1L);
+        Recipe recipeReturned = recipeService.findById(1L);
 
-        assertTrue(recipeReturned.isPresent());
+        assertNotNull(recipeReturned);
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }
@@ -72,7 +73,6 @@ public class RecipeServiceImplTest {
 
     @Test
     public void getRecipes() {
-
         Set<Recipe> recipes = new HashSet<>();
         Recipe recipe = new Recipe();
         recipes.add(recipe);
@@ -83,8 +83,10 @@ public class RecipeServiceImplTest {
         verify(recipeRepository, times(1)).findAll();
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void findById() {
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
+        recipeService.findById(1L);
     }
 
     @Test

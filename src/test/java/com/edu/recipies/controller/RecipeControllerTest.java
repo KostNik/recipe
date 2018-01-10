@@ -1,6 +1,7 @@
 package com.edu.recipies.controller;
 
 import com.edu.recipies.commands.RecipeCommand;
+import com.edu.recipies.exceptions.NotFoundException;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.service.RecipeService;
 import org.junit.Before;
@@ -44,7 +45,7 @@ public class RecipeControllerTest {
     public void testShowRecipe() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
-        when(recipeService.findById(anyLong())).thenReturn(Optional.of(new Recipe()));
+        when(recipeService.findById(anyLong())).thenReturn(new Recipe());
 
         mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(status().isOk())
@@ -83,6 +84,16 @@ public class RecipeControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/7/show"));
+    }
+
+    @Test
+    public void testNotFoundStatus() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
