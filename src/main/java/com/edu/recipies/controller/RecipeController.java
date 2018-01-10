@@ -1,12 +1,15 @@
 package com.edu.recipies.controller;
 
 import com.edu.recipies.commands.RecipeCommand;
+import com.edu.recipies.exceptions.NotFoundException;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
 
@@ -55,5 +58,13 @@ public class RecipeController {
     public String deleteRecipe(@RequestParam Long id) {
         recipeService.deleteById(id);
         return "redirect:/all";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFound() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("404error");
+        return modelAndView;
     }
 }
