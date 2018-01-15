@@ -41,17 +41,7 @@ jobs:
       # run tests!
       - run: gradle test
 
-       # run tests! and gen code coverage
-#      - run: mvn integration-test cobertura:cobertura
-
-#      - store_test_results:
-#                path: target/surefire-reports
-#
-      test:
+      - test:
           post:
               - if [ -e ./gradlew ]; then ./gradlew jacocoTestReport;else gradle jacocoTestReport;fi
               - bash <(curl -s https://codecov.io/bash)
-
-#          test:
-#            post:
-#              - bash <(curl -s https://codecov.io/bash)
