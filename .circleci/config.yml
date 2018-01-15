@@ -38,10 +38,14 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
+    test:
+      post:
+        - bash <(curl -s https://codecov.io/bash)
       # run tests!
-      - run: gradle test
+#      - run: gradle test
 
-      - run:
-          - post:
-              - if [ -e ./gradlew ]; then ./gradlew jacocoTestReport;else gradle jacocoTestReport;fi
-              - bash <(curl -s https://codecov.io/bash)
+#      - run:
+#          - post:
+#              - if [ -e ./gradlew ]; then ./gradlew jacocoTestReport;else gradle jacocoTestReport;fi
+#              - bash <(curl -s https://codecov.io/bash)
+
