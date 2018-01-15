@@ -62,6 +62,7 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '23.0'
 
     compile 'org.webjars:bootstrap:3.3.7'
+    compile group: 'mysql', name: 'mysql-connector-java'
 
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
