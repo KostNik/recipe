@@ -40,11 +40,11 @@ jobs:
 
       # run tests!
       - run: gradle test
-      - run:
-          - ./gradlew check
-          - ./gradlew codeCoverageReport
-      after_success:
-          - bash <(curl -s https://codecov.io/bash)
+#      - run:
+#          - ./gradlew check
+#          - ./gradlew codeCoverageReport
+#      after_success:
+      -run: bash <(curl -s https://codecov.io/bash)
 
        # run tests! and gen code coverage
 #      - run: mvn integration-test cobertura:cobertura
