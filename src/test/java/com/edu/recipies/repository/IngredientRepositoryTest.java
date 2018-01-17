@@ -40,9 +40,9 @@ public class IngredientRepositoryTest {
 
         Recipe savedRecipe = recipeRepository.save(recipe);
 
-        Optional<Ingredient> ingredient = ingredientRepository.findByRecipeIdAndId(1L, 2L);
+        Optional<Ingredient> ingredient = ingredientRepository.findByRecipeIdAndId("1L", "2L");
         assertTrue(ingredient.isPresent());
-        assertEquals(Long.valueOf(2L), ingredient.get().getId());
-        assertEquals(Long.valueOf(1L), savedRecipe.getId());
+        assertEquals("2L", ingredient.get().getId());
+        assertEquals("1L", savedRecipe.getId());
     }
 }

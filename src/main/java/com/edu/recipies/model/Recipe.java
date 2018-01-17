@@ -3,6 +3,7 @@ package com.edu.recipies.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -15,12 +16,9 @@ import java.util.Set;
 
 @Getter
 @Setter
-@Entity
 public class Recipe {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String     url;
     private String     source;
@@ -28,23 +26,11 @@ public class Recipe {
     private Integer    cookTime;
     private Integer    prepTime;
     private String     description;
-    @Lob
     private String     directions;
-    @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
-    @Lob
     private Byte[]     image;
-
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private Set<Ingredient> ingredients = new HashSet<>();
-
-    @ManyToMany
-    @JoinTable(name = "recipe_category",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
-
-    @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
 
 

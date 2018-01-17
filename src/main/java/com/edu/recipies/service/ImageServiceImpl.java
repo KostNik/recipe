@@ -26,7 +26,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void saveImageFile(Long id, MultipartFile multipartFile) {
+    public void saveImageFile(String id, MultipartFile multipartFile) {
         recipeRepository.findById(id).ifPresent(recipeCommand -> {
             try {
                 recipeCommand.setImage(convertToByteObjectsArray(multipartFile.getBytes()));

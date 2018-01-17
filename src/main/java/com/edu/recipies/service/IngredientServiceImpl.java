@@ -42,14 +42,14 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Optional<IngredientCommand> findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
+    public Optional<IngredientCommand> findByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
         return ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId).map(ingredientToCommandConverter::convert);
     }
 
     @Override
     public Optional<IngredientCommand> saveOrUpdateIngredient(IngredientCommand ingredientCommand) {
 
-        Long recipeId = ingredientCommand.getRecipeId();
+        String recipeId = ingredientCommand.getRecipeId();
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
 
         if (!recipeOptional.isPresent()) {
@@ -57,7 +57,7 @@ public class IngredientServiceImpl implements IngredientService {
             return Optional.of(new IngredientCommand());
         } else {
             Recipe recipe = recipeOptional.get();
-            Long ingredientId = ingredientCommand.getId();
+            String ingredientId = ingredientCommand.getId();
             Optional<Ingredient> ingredientOptional = ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId);
 
             if (ingredientOptional.isPresent()) {
@@ -89,7 +89,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Boolean deleteIngredient(Long id) {
+    public Boolean deleteIngredient(String id) {
         try {
             ingredientRepository.deleteById(id);
             return true;

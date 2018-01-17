@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
-import javax.persistence.Lob;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -17,7 +16,7 @@ import java.util.Set;
 @Setter
 public class RecipeCommand {
 
-    private Long       id;
+    private String     id;
     @URL
     private String     url;
     private String     source;

@@ -45,13 +45,13 @@ public class ImageController {
     }
 
     @GetMapping("/recipe/{id}/imageform")
-    public String getImageForm(@PathVariable Long id, Model model) {
+    public String getImageForm(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.findCommandById(id).get());
         return "recipe/imageuploadform";
     }
 
     @GetMapping("/recipe/{id}/image")
-    public void getRecipeImage(@PathVariable Long id, HttpServletResponse response) throws IOException, URISyntaxException {
+    public void getRecipeImage(@PathVariable String id, HttpServletResponse response) throws IOException, URISyntaxException {
         RecipeCommand recipeCommand = recipeService.findCommandById(id).get();
         Byte[] imageDataFromDB = recipeCommand.getImage();
         byte[] imageBytes;
@@ -65,7 +65,7 @@ public class ImageController {
     }
 
     @PostMapping("/recipe/{id}/image")
-    public String handleImageForm(@PathVariable Long id, @RequestParam("imagefile") MultipartFile multipartFile) {
+    public String handleImageForm(@PathVariable String id, @RequestParam("imagefile") MultipartFile multipartFile) {
         imageService.saveImageFile(id, multipartFile);
         return "redirect:/recipe/" + id + "/show";
     }

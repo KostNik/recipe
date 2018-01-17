@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,14 +42,14 @@ public class ImageServiceTest {
     @Test
     public void testSaveImageFile() throws IOException {
         Recipe recipe = new Recipe();
-        recipe.setId(3L);
+        recipe.setId("3L");
 
         ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
         MockMultipartFile multipartFile = new MockMultipartFile("testImage", "testFile", "imageContent", "Test".getBytes());
 
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
+        when(recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
 
-        imageService.saveImageFile(3L, multipartFile);
+        imageService.saveImageFile("3L", multipartFile);
 
         verify(recipeRepository, times(1)).save(argumentCaptor.capture());
         Recipe saved = argumentCaptor.getValue();

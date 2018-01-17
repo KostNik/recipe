@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 public class CommandToCategoryTest {
 
-    private final static long   ID          = 1;
+    private final static String ID          = "1";
     private final static String DESCRIPTION = "new description";
 
     private CommandToCategory converter;
@@ -20,15 +20,14 @@ public class CommandToCategoryTest {
     }
 
     @Test
-    public void testNullObject(){
+    public void testNullObject() {
         assertNull(converter.convert(null));
     }
 
     @Test
-    public void testEmptyObject(){
+    public void testEmptyObject() {
         assertNotNull(converter.convert(new CategoryCommand()));
     }
-
 
 
     @Test

@@ -4,29 +4,25 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"description", "amount", "unitOfMeasure"})
 public class Ingredient {
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String     description;
     private BigDecimal amount;
 
-    @ManyToOne
     private Recipe recipe;
 
-    @OneToOne
     private UnitOfMeasure unitOfMeasure;
 
     public Ingredient(String description) {

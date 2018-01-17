@@ -36,9 +36,9 @@ public class UnitOfMeasureServiceTest {
     @Test
     public void testListAllUoms() {
         UnitOfMeasure unitOfMeasure_1 = new UnitOfMeasure();
-        unitOfMeasure_1.setId(1L);
+        unitOfMeasure_1.setId("1L");
         UnitOfMeasure unitOfMeasure_2 = new UnitOfMeasure();
-        unitOfMeasure_2.setId(2L);
+        unitOfMeasure_2.setId("2L");
         Set<UnitOfMeasure> unitOfMeasures = Sets.newHashSet(unitOfMeasure_1, unitOfMeasure_2);
         when(repository.findAll()).thenReturn(unitOfMeasures);
 

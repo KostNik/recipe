@@ -20,6 +20,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -53,30 +54,30 @@ public class IngredientServiceImplTest {
     public void testSaveRecipeCommand() {
         //given
         IngredientCommand command = new IngredientCommand();
-        command.setId(3L);
-        command.setRecipeId(2L);
+        command.setId("3L");
+        command.setRecipeId("2L");
 
         Recipe savedRecipe = new Recipe();
         Ingredient ingredient = new Ingredient();
-        ingredient.setId(3L);
+        ingredient.setId("3L");
         savedRecipe.addIngredient(ingredient);
 
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(new Recipe()));
+        when(recipeRepository.findById(anyString())).thenReturn(Optional.of(new Recipe()));
         when(recipeRepository.save(any())).thenReturn(savedRecipe);
 
         //when
         Optional<IngredientCommand> savedCommand = ingredientService.saveOrUpdateIngredient(command);
 
         //then
-        assertEquals(Long.valueOf(3L), savedCommand.get().getId());
-        verify(recipeRepository, times(1)).findById(anyLong());
+        assertEquals("3L", savedCommand.get().getId());
+        verify(recipeRepository, times(1)).findById(anyString());
         verify(recipeRepository, times(1)).save(any(Recipe.class));
     }
 
     @Test
     public void testDeleteIngredientByID() {
-        ingredientService.deleteIngredient(anyLong());
-        verify(ingredientRepository, times(1)).deleteById(anyLong());
+        ingredientService.deleteIngredient(anyString());
+        verify(ingredientRepository, times(1)).deleteById(anyString());
     }
 
 }

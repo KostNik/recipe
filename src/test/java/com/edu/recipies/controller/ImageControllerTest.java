@@ -17,6 +17,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,11 +51,11 @@ public class ImageControllerTest {
 
     @Test
     public void testGetImageForm() throws Exception {
-        when(recipeService.findCommandById(anyLong())).thenReturn(Optional.of(new RecipeCommand()));
+        when(recipeService.findCommandById(anyString())).thenReturn(Optional.of(new RecipeCommand()));
         mockMvc.perform(get("/recipe/1/imageform"))
                 .andExpect(model().attributeExists("recipe"))
                 .andExpect(status().isOk());
-        verify(recipeService, times(1)).findCommandById(anyLong());
+        verify(recipeService, times(1)).findCommandById(anyString());
     }
 
     @Test
@@ -65,7 +66,7 @@ public class ImageControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/1/show"));
 
-        verify(imageService, times(1)).saveImageFile(anyLong(), any());
+        verify(imageService, times(1)).saveImageFile(anyString(), any());
 
     }
 
@@ -80,12 +81,12 @@ public class ImageControllerTest {
     @Test
     public void renderImageFromDB() throws Exception {
         RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(3L);
+        recipeCommand.setId("3");
 
         Byte[] testArray = new Byte[]{12, 34, 56, 78, 2};
         recipeCommand.setImage(testArray);
 
-        when(recipeService.findCommandById(anyLong())).thenReturn(Optional.of(recipeCommand));
+        when(recipeService.findCommandById(anyString())).thenReturn(Optional.of(recipeCommand));
 
         MockHttpServletResponse response = mockMvc.perform(get("/recipe/3/image"))
                 .andExpect(status().isOk())

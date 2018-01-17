@@ -31,14 +31,14 @@ public class RecipeController {
 
 
     @RequestMapping(value = "recipe/{id}/show", method = RequestMethod.GET)
-    public String showRecipe(@PathVariable long id, Model model) {
+    public String showRecipe(@PathVariable String id, Model model) {
         Recipe recipe = recipeService.findById(id);
         model.addAttribute("recipe", recipe);
         return "recipe/show";
     }
 
     @RequestMapping(value = "recipe/{id}/update", method = RequestMethod.GET)
-    public String updateRecipe(@PathVariable Long id, Model model) {
+    public String updateRecipe(@PathVariable String id, Model model) {
         recipeService.findCommandById(id).ifPresent(r -> model.addAttribute("recipe", r));
         return RECIPE_FORM_URL;
     }
@@ -68,7 +68,7 @@ public class RecipeController {
 
 
     @RequestMapping(value = "recipe/delete", method = RequestMethod.GET)
-    public String deleteRecipe(@RequestParam Long id) {
+    public String deleteRecipe(@RequestParam String id) {
         recipeService.deleteById(id);
         return "redirect:/all";
     }

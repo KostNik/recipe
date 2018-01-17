@@ -9,7 +9,7 @@ import lombok.Setter;
 @EqualsAndHashCode(of = "id")
 public class UnitOfMeasureCommand {
 
-    private Long   id;
+    private String id;
     private String description;
 
 }
