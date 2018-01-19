@@ -4,7 +4,10 @@ import com.edu.recipies.model.*;
 import com.edu.recipies.repository.CategoryRepository;
 import com.edu.recipies.repository.RecipeRepository;
 import com.edu.recipies.repository.UnitOfMeasureRepository;
+import com.edu.recipies.repository.reactive.CategoryReactiveRepository;
+import com.edu.recipies.repository.reactive.RecipeReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -22,6 +25,13 @@ public class BootstrapApp {
     private final RecipeRepository        recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
     private final CategoryRepository      categoryRepository;
+
+    @Autowired
+    private RecipeReactiveRepository recipeReactiveRepository;
+
+    @Autowired
+    private CategoryReactiveRepository categoryReactiveRepository;
+
 
     public BootstrapApp(RecipeRepository recipeRepository, UnitOfMeasureRepository unitOfMeasureRepository, CategoryRepository categoryRepository) {
         this.recipeRepository = recipeRepository;
@@ -41,6 +51,14 @@ public class BootstrapApp {
             loadUom();
         }
         recipeRepository.saveAll(getRecipes());
+
+        Long recCount = recipeReactiveRepository.count().block();
+        Long catCount = categoryReactiveRepository.count().block();
+
+        log.info("Recipes {}", recCount);
+        log.info("Categories {}", catCount);
+
+
     }
 
     private List<Recipe> getRecipes() {
