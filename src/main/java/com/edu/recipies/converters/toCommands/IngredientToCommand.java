@@ -31,11 +31,7 @@ public class IngredientToCommand implements Converter<Ingredient, IngredientComm
         command.setAmount(source.getAmount());
         command.setDescription(source.getDescription());
         command.setId(source.getId());
-        Recipe recipe = source.getRecipe();
         command.setUnitOfMeasureCommand(unitOfMeasureToCommand.convert(source.getUnitOfMeasure()));
-        if (recipe != null) {
-            command.setRecipeId(recipe.getId());
-        }
 
         return command;
     }

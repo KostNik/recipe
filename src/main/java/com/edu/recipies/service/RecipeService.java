@@ -1,5 +1,6 @@
 package com.edu.recipies.service;
 
+import com.edu.recipies.commands.IngredientCommand;
 import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.model.Recipe;
 import org.springframework.web.multipart.MultipartFile;

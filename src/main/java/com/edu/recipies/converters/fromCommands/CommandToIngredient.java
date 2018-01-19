@@ -2,6 +2,7 @@ package com.edu.recipies.converters.fromCommands;
 
 import com.edu.recipies.commands.IngredientCommand;
 import com.edu.recipies.model.Ingredient;
+import com.edu.recipies.model.Recipe;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
@@ -28,6 +29,13 @@ public class CommandToIngredient implements Converter<IngredientCommand, Ingredi
 
         final Ingredient ingredient = new Ingredient();
         ingredient.setId(source.getId());
+
+        if (source.getRecipeId() != null) {
+            Recipe recipe = new Recipe();
+            recipe.setId(source.getRecipeId());
+            recipe.addIngredient(ingredient);
+        }
+
         ingredient.setAmount(source.getAmount());
         ingredient.setDescription(source.getDescription());
         ingredient.setUnitOfMeasure(uomConverter.convert(source.getUnitOfMeasureCommand()));

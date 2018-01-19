@@ -3,6 +3,7 @@ package com.edu.recipies.controller;
 import com.edu.recipies.commands.IngredientCommand;
 import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.commands.UnitOfMeasureCommand;
+import com.edu.recipies.model.Ingredient;
 import com.edu.recipies.service.IngredientService;
 import com.edu.recipies.service.RecipeService;
 import com.edu.recipies.service.UnitOfMeasureService;
@@ -47,7 +48,8 @@ public class IngredientController {
     @GetMapping
     @RequestMapping(value = "/recipe/{recipeId}/ingredient/{ingredientId}/show")
     public String showIngredient(@PathVariable String recipeId, @PathVariable(value = "ingredientId") String ingrId, Model model) {
-        return ingredientService.findByRecipeIdAndIngredientId(recipeId, ingrId)
+        Optional<IngredientCommand> ingredientOptional = ingredientService.findByRecipeIdAndIngredientId(recipeId, ingrId);
+        return ingredientOptional
                 .map(ingredient -> {
                     model.addAttribute("ingredient", ingredient);
                     return "recipe/ingredient/show";

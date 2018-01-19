@@ -5,6 +5,7 @@ import com.edu.recipies.model.Recipe;
 import com.edu.recipies.repository.IngredientRepository;
 import com.edu.recipies.repository.RecipeRepository;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 
+@Ignore
 @DataJpaTest
 @RunWith(SpringRunner.class)
 public class IngredientRepositoryTest {

@@ -11,6 +11,7 @@ import com.edu.recipies.model.UnitOfMeasure;
 import com.edu.recipies.repository.IngredientRepository;
 import com.edu.recipies.repository.RecipeRepository;
 import com.edu.recipies.repository.UnitOfMeasureRepository;
+import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,21 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Optional<IngredientCommand> findByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
-        return ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId).map(ingredientToCommandConverter::convert);
+        return findIngredientByRecipeIdAndIngredientId(recipeId, ingredientId)
+                .map(ingredientToCommandConverter::convert)
+                .map(ic -> {
+                    ic.setRecipeId(recipeId);
+                    return ic;
+                });
+    }
+
+    private Optional<Ingredient> findIngredientByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
+        return ImmutableSet.copyOf(recipeRepository.findAll())
+                .stream()
+                .filter(r -> r.getId().equals(recipeId))
+                .flatMap(r -> r.getIngredients().stream())
+                .filter(i -> i.getId().equals(ingredientId))
+                .findFirst();
     }
 
     @Override
@@ -58,7 +73,7 @@ public class IngredientServiceImpl implements IngredientService {
         } else {
             Recipe recipe = recipeOptional.get();
             String ingredientId = ingredientCommand.getId();
-            Optional<Ingredient> ingredientOptional = ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId);
+            Optional<Ingredient> ingredientOptional = recipe.getIngredients().stream().filter(i -> i.getId().equals(ingredientId)).findFirst();
 
             if (ingredientOptional.isPresent()) {
                 Ingredient ingredient = ingredientOptional.get();
