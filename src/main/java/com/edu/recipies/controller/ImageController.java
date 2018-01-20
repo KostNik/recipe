@@ -46,13 +46,13 @@ public class ImageController {
 
     @GetMapping("/recipe/{id}/imageform")
     public String getImageForm(@PathVariable String id, Model model) {
-        model.addAttribute("recipe", recipeService.findCommandById(id).get());
+        model.addAttribute("recipe", recipeService.findCommandById(id).block());
         return "recipe/imageuploadform";
     }
 
     @GetMapping("/recipe/{id}/image")
     public void getRecipeImage(@PathVariable String id, HttpServletResponse response) throws IOException, URISyntaxException {
-        RecipeCommand recipeCommand = recipeService.findCommandById(id).get();
+        RecipeCommand recipeCommand = recipeService.findCommandById(id).block();
         Byte[] imageDataFromDB = recipeCommand.getImage();
         byte[] imageBytes;
         if (imageDataFromDB == null || imageDataFromDB.length == 0) {

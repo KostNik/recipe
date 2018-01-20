@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,6 +42,8 @@ public class StartPageControllerTest {
 
     @Test
     public void testMockMVC() throws Exception {
+        when(recipeService.getRecipes()).thenReturn(Flux.empty());
+
         mockMvc.perform(get("/all"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"));
@@ -55,7 +58,7 @@ public class StartPageControllerTest {
         recipes.add(recipe);
         ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
 
-        when(recipeService.getRecipes()).thenReturn(recipes);
+        when(recipeService.getRecipes()).thenReturn(Flux.fromIterable(recipes));
 
         assertEquals("index", startPageController.getAllRecipes(model));
 

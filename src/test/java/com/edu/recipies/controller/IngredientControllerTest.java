@@ -13,6 +13,8 @@ import org.mockito.internal.util.collections.Sets;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -35,7 +37,7 @@ public class IngredientControllerTest {
 
     @Mock
     private IngredientController ingredientController;
-    private MockMvc mockMvc;
+    private MockMvc              mockMvc;
 
     @Before
     public void setUp() throws Exception {
@@ -49,7 +51,7 @@ public class IngredientControllerTest {
     public void testShowAllIngredients() throws Exception {
         RecipeCommand value = new RecipeCommand();
         value.setId("1");
-        when(recipeService.findCommandById(anyString())).thenReturn(Optional.of(value));
+        when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(value));
 
 
         mockMvc.perform(get("/recipe/1/ingredients"))
@@ -61,7 +63,7 @@ public class IngredientControllerTest {
 
     @Test
     public void testShowAllIngredientsWhenNoRecipe() throws Exception {
-        when(recipeService.findCommandById(anyString())).thenReturn(Optional.empty());
+        when(recipeService.findCommandById(anyString())).thenReturn(Mono.empty());
 
         mockMvc.perform(get("/recipe/1/ingredients"))
                 .andExpect(status().is3xxRedirection())
@@ -71,7 +73,7 @@ public class IngredientControllerTest {
 
     @Test
     public void testShowIngredients() throws Exception {
-        when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(Optional.of(new IngredientCommand()));
+        when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(Mono.just(new IngredientCommand()));
 
         mockMvc.perform(get("/recipe/1/ingredient/2/show"))
                 .andExpect(status().isOk())
@@ -82,8 +84,8 @@ public class IngredientControllerTest {
 
     @Test
     public void testUpdateIngredientForm() throws Exception {
-        when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(Optional.of(new IngredientCommand()));
-        when(unitOfMeasureService.listAllUoms()).thenReturn(Sets.newSet());
+        when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(Mono.just(new IngredientCommand()));
+        when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.empty());
 
         mockMvc.perform(get("/recipe/1/ingredient/2/update"))
                 .andExpect(status().isOk())
@@ -98,8 +100,8 @@ public class IngredientControllerTest {
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId("3");
 
-        when(recipeService.findCommandById(anyString())).thenReturn(Optional.of(recipeCommand));
-        when(unitOfMeasureService.listAllUoms()).thenReturn(Sets.newSet());
+        when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(recipeCommand));
+        when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.empty());
 
         mockMvc.perform(get("/recipe/1/ingredient/new"))
                 .andExpect(status().isOk())
@@ -114,7 +116,7 @@ public class IngredientControllerTest {
     public void testSaveIngredientCommand() throws Exception {
         IngredientCommand value = new IngredientCommand();
         value.setId("2");
-        when(ingredientService.saveOrUpdateIngredient(any(IngredientCommand.class))).thenReturn(Optional.of(value));
+        when(ingredientService.saveOrUpdateIngredient(any(IngredientCommand.class))).thenReturn(Mono.just(value));
 
         mockMvc.perform(post("/recipe/1/ingredient")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
@@ -125,11 +127,11 @@ public class IngredientControllerTest {
 
     @Test
     public void testDeleteIngredient() throws Exception {
-        when(ingredientService.deleteIngredient(anyString())).thenReturn(true);
+        when(ingredientService.deleteIngredient(anyString(), anyString())).thenReturn(true);
 
         mockMvc.perform(delete("/recipe/1/ingredient/1"))
                 .andExpect(status().isOk());
 
-        verify(ingredientService, times(1)).deleteIngredient(anyString());
+        verify(ingredientService, times(1)).deleteIngredient(anyString(), anyString());
     }
 }

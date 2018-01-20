@@ -1,14 +1,15 @@
 package com.edu.recipies.service;
 
 import com.edu.recipies.commands.IngredientCommand;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
 public interface IngredientService {
 
-    Optional<IngredientCommand> findByRecipeIdAndIngredientId(String recipeId, String ingredientId);
+    Mono<IngredientCommand> findByRecipeIdAndIngredientId(String recipeId, String ingredientId);
 
-    Optional<IngredientCommand> saveOrUpdateIngredient(IngredientCommand ingredientCommand);
+    Mono<IngredientCommand> saveOrUpdateIngredient(IngredientCommand ingredientCommand);
 
-    Boolean deleteIngredient(String id);
+    Boolean deleteIngredient(String recipeId, String ingredientId);
 }

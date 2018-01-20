@@ -6,9 +6,12 @@ import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.exceptions.NotFoundException;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.repository.RecipeRepository;
+import com.edu.recipies.repository.reactive.RecipeReactiveRepository;
 import com.google.common.collect.ImmutableSet;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 import java.util.Set;
@@ -16,11 +19,11 @@ import java.util.Set;
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
-    private final RecipeRepository recipeRepository;
-    private final CommandToRecipe  commandToRecipe;
-    private final RecipeToCommand  recipeToCommand;
+    private final RecipeReactiveRepository recipeRepository;
+    private final CommandToRecipe          commandToRecipe;
+    private final RecipeToCommand          recipeToCommand;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository,
+    public RecipeServiceImpl(RecipeReactiveRepository recipeRepository,
                              CommandToRecipe commandToRecipe,
                              RecipeToCommand recipeToCommand) {
         this.recipeRepository = recipeRepository;
@@ -30,25 +33,24 @@ public class RecipeServiceImpl implements RecipeService {
 
 
     @Override
-    public Set<Recipe> getRecipes() {
-        return ImmutableSet.copyOf(recipeRepository.findAll());
+    public Flux<Recipe> getRecipes() {
+        return recipeRepository.findAll();
     }
 
     @Override
-    public Recipe findById(String id) {
-        return recipeRepository.findById(id).orElseThrow(() -> new NotFoundException("Recipe with ID " + id + " was not found"));
+    public Mono<Recipe> findById(String id) {
+        return recipeRepository.findById(id);
     }
 
     @Override
-    public Optional<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand) {
+    public Mono<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand) {
         Recipe recipe = commandToRecipe.convert(recipeCommand);
-        Recipe saved = recipeRepository.save(recipe);
-        RecipeCommand savedRecipeCommand = recipeToCommand.convert(saved);
-        return Optional.ofNullable(savedRecipeCommand);
+        Mono<Recipe> saved = recipeRepository.save(recipe);
+        return saved.map(recipeToCommand::convert);
     }
 
     @Override
-    public Optional<RecipeCommand> findCommandById(String id) {
+    public Mono<RecipeCommand> findCommandById(String id) {
         return recipeRepository.findById(id).map(recipeToCommand::convert);
     }
 

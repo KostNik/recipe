@@ -4,19 +4,21 @@ import com.edu.recipies.commands.IngredientCommand;
 import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.model.Recipe;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 import java.util.Set;
 
 public interface RecipeService {
 
-    Set<Recipe> getRecipes();
+    Flux<Recipe> getRecipes();
 
-    Recipe findById(String id);
+    Mono<Recipe> findById(String id);
 
-    Optional<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand);
+    Mono<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand);
 
-    Optional<RecipeCommand> findCommandById(String id);
+    Mono<RecipeCommand> findCommandById(String id);
 
     void deleteById(String id);
 

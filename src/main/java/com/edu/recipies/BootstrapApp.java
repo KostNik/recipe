@@ -6,6 +6,7 @@ import com.edu.recipies.repository.RecipeRepository;
 import com.edu.recipies.repository.UnitOfMeasureRepository;
 import com.edu.recipies.repository.reactive.CategoryReactiveRepository;
 import com.edu.recipies.repository.reactive.RecipeReactiveRepository;
+import com.edu.recipies.repository.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -22,18 +23,12 @@ import java.util.List;
 @Component
 public class BootstrapApp {
 
-    private final RecipeRepository        recipeRepository;
-    private final UnitOfMeasureRepository unitOfMeasureRepository;
-    private final CategoryRepository      categoryRepository;
-
-    @Autowired
-    private RecipeReactiveRepository recipeReactiveRepository;
-
-    @Autowired
-    private CategoryReactiveRepository categoryReactiveRepository;
+    private final RecipeReactiveRepository        recipeRepository;
+    private final UnitOfMeasureReactiveRepository unitOfMeasureRepository;
+    private final CategoryReactiveRepository      categoryRepository;
 
 
-    public BootstrapApp(RecipeRepository recipeRepository, UnitOfMeasureRepository unitOfMeasureRepository, CategoryRepository categoryRepository) {
+    public BootstrapApp(RecipeReactiveRepository recipeRepository, UnitOfMeasureReactiveRepository unitOfMeasureRepository, CategoryReactiveRepository categoryRepository) {
         this.recipeRepository = recipeRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
         this.categoryRepository = categoryRepository;
@@ -41,24 +36,16 @@ public class BootstrapApp {
 
     @EventListener(classes = {ContextRefreshedEvent.class})
     public void onApplicationEvent() {
-        if (categoryRepository.count() == 0L) {
+        if (categoryRepository.count().block() == 0L) {
             log.debug("Loading Categories");
             loadCategories();
         }
 
-        if (unitOfMeasureRepository.count() == 0L) {
+        if (unitOfMeasureRepository.count().block() == 0L) {
             log.debug("Loading UOMs");
             loadUom();
         }
         recipeRepository.saveAll(getRecipes());
-
-        Long recCount = recipeReactiveRepository.count().block();
-        Long catCount = categoryReactiveRepository.count().block();
-
-        log.info("Recipes {}", recCount);
-        log.info("Categories {}", catCount);
-
-
     }
 
     private List<Recipe> getRecipes() {
@@ -180,64 +167,62 @@ public class BootstrapApp {
     }
 
     private Category getCategoryOrThrowException(String description) {
-        return categoryRepository.findByDescription(description)
-                .orElseThrow(() -> new RuntimeException("Expected Category Not Found"));
+        return categoryRepository.findByDescription(description).block();
     }
 
     private UnitOfMeasure getUnitOfMeasureOrThrowException(String description) {
-        return unitOfMeasureRepository.findByDescription(description)
-                .orElseThrow(() -> new RuntimeException("Expected UOM Not Found " + description));
+        return unitOfMeasureRepository.findByDescription(description).block();
     }
 
     private void loadCategories() {
         Category cat1 = new Category();
         cat1.setDescription("American");
-        categoryRepository.save(cat1);
+        categoryRepository.save(cat1).block();
 
         Category cat2 = new Category();
         cat2.setDescription("Italian");
-        categoryRepository.save(cat2);
+        categoryRepository.save(cat2).block();
 
         Category cat3 = new Category();
         cat3.setDescription("Mexican");
-        categoryRepository.save(cat3);
+        categoryRepository.save(cat3).block();
 
         Category cat4 = new Category();
         cat4.setDescription("Fast Food");
-        categoryRepository.save(cat4);
+        categoryRepository.save(cat4).block();
     }
 
     private void loadUom() {
         UnitOfMeasure uom1 = new UnitOfMeasure();
         uom1.setDescription("Teaspoon");
-        unitOfMeasureRepository.save(uom1);
+        unitOfMeasureRepository.save(uom1).block();
 
         UnitOfMeasure uom2 = new UnitOfMeasure();
         uom2.setDescription("Tablespoon");
-        unitOfMeasureRepository.save(uom2);
+        unitOfMeasureRepository.save(uom2).block();
 
         UnitOfMeasure uom3 = new UnitOfMeasure();
         uom3.setDescription("Cup");
-        unitOfMeasureRepository.save(uom3);
+        unitOfMeasureRepository.save(uom3).block();
 
         UnitOfMeasure uom4 = new UnitOfMeasure();
         uom4.setDescription("Pinch");
-        unitOfMeasureRepository.save(uom4);
+        unitOfMeasureRepository.save(uom4).block();
 
         UnitOfMeasure uom5 = new UnitOfMeasure();
         uom5.setDescription("Ounce");
-        unitOfMeasureRepository.save(uom5);
+        unitOfMeasureRepository.save(uom5).block();
 
         UnitOfMeasure uom6 = new UnitOfMeasure();
         uom6.setDescription("Each");
-        unitOfMeasureRepository.save(uom6);
+        unitOfMeasureRepository.save(uom6).block();
 
         UnitOfMeasure uom7 = new UnitOfMeasure();
         uom7.setDescription("Pint");
-        unitOfMeasureRepository.save(uom7);
+        unitOfMeasureRepository.save(uom7).block();
 
         UnitOfMeasure uom8 = new UnitOfMeasure();
         uom8.setDescription("Dash");
-        unitOfMeasureRepository.save(uom8);
+        unitOfMeasureRepository.save(uom8).block();
     }
 }

@@ -6,10 +6,15 @@ import com.edu.recipies.converters.toCommands.RecipeToCommand;
 import com.edu.recipies.exceptions.NotFoundException;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.repository.RecipeRepository;
+import com.edu.recipies.repository.reactive.RecipeReactiveRepository;
+import com.google.common.collect.ImmutableSet;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -25,7 +30,7 @@ public class RecipeServiceImplTest {
     private RecipeService recipeService;
 
     @Mock
-    private RecipeRepository recipeRepository;
+    private RecipeReactiveRepository recipeRepository;
 
     @Mock
     private RecipeToCommand recipeToCommand;
@@ -42,9 +47,9 @@ public class RecipeServiceImplTest {
 
     @Test
     public void getRecipeById() {
-        when(recipeRepository.findById(anyString())).thenReturn(Optional.of(new Recipe()));
+        when(recipeRepository.findById(anyString())).thenReturn(Mono.just(new Recipe()));
 
-        Recipe recipeReturned = recipeService.findById("1L");
+        Recipe recipeReturned = recipeService.findById("1L").block();
 
         assertNotNull(recipeReturned);
         verify(recipeRepository, times(1)).findById(anyString());
@@ -55,7 +60,7 @@ public class RecipeServiceImplTest {
     public void getRecipeCommandByIdTest() {
         Recipe recipe = new Recipe();
         recipe.setId("1L");
-        Optional<Recipe> recipeOptional = Optional.of(recipe);
+        Mono<Recipe> recipeOptional = Mono.just(recipe);
 
         when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
 
@@ -64,7 +69,7 @@ public class RecipeServiceImplTest {
 
         when(recipeToCommand.convert(any())).thenReturn(recipeCommand);
 
-        RecipeCommand commandById = recipeService.findCommandById("1L").orElse(null);
+        RecipeCommand commandById = recipeService.findCommandById("1L").blockOptional().orElse(null);
 
         assertNotNull("Null recipe returned", commandById);
         verify(recipeRepository, times(1)).findById(anyString());
@@ -76,21 +81,25 @@ public class RecipeServiceImplTest {
         Set<Recipe> recipes = new HashSet<>();
         Recipe recipe = new Recipe();
         recipes.add(recipe);
-        when(recipeService.getRecipes()).thenReturn(recipes);
+        when(recipeService.getRecipes()).thenReturn(Flux.fromIterable(recipes));
 
-        Set<Recipe> savedRecipes = recipeService.getRecipes();
+        Set<Recipe> savedRecipes = ImmutableSet.copyOf(recipeService.getRecipes().toIterable());
         assertEquals(savedRecipes.size(), 1);
         verify(recipeRepository, times(1)).findAll();
     }
 
-    @Test(expected = NotFoundException.class)
-    public void findById() {
-        when(recipeRepository.findById(anyString())).thenReturn(Optional.empty());
-        recipeService.findById("1L");
-    }
+    private final static String NEW_URL = "fake_url";
 
     @Test
     public void saveRecipeCommand() {
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId("ONE");
+
+        when(recipeRepository.save(any())).thenReturn(Mono.empty());
+
+        recipeService.saveRecipeCommand(recipeCommand);
+
+        verify(recipeRepository, times(1)).save(any());
     }
 
     @Test
