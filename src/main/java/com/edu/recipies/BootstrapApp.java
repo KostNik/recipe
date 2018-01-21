@@ -45,7 +45,7 @@ public class BootstrapApp {
             log.debug("Loading UOMs");
             loadUom();
         }
-        recipeRepository.saveAll(getRecipes());
+        recipeRepository.saveAll(getRecipes()).collectList().block();
     }
 
     private List<Recipe> getRecipes() {
