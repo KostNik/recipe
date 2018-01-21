@@ -3,12 +3,14 @@ package com.edu.recipies.service;
 import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.model.Recipe;
 import com.edu.recipies.repository.RecipeRepository;
+import com.edu.recipies.repository.reactive.RecipeReactiveRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -30,7 +32,7 @@ public class ImageServiceTest {
     private RecipeService recipeService;
 
     @Mock
-    private RecipeRepository recipeRepository;
+    private RecipeReactiveRepository recipeRepository;
 
 
     @Before
@@ -47,7 +49,7 @@ public class ImageServiceTest {
         ArgumentCaptor<Recipe> argumentCaptor = ArgumentCaptor.forClass(Recipe.class);
         MockMultipartFile multipartFile = new MockMultipartFile("testImage", "testFile", "imageContent", "Test".getBytes());
 
-        when(recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
+        when(recipeRepository.findById(anyString())).thenReturn(Mono.just(recipe));
 
         imageService.saveImageFile("3L", multipartFile);
 

@@ -1,9 +1,8 @@
 package com.edu.recipies.service;
 
-import com.edu.recipies.repository.RecipeRepository;
+import com.edu.recipies.repository.reactive.RecipeReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,22 +14,21 @@ import static com.edu.recipies.RecipeUtils.convertToByteObjectsArray;
 public class ImageServiceImpl implements ImageService {
 
 
-    private final RecipeService    recipeService;
-    private final RecipeRepository recipeRepository;
+    private final RecipeService            recipeService;
+    private final RecipeReactiveRepository recipeRepository;
 
     public ImageServiceImpl(RecipeService recipeService,
-                            RecipeRepository recipeRepository) {
+                            RecipeReactiveRepository recipeRepository) {
         this.recipeService = recipeService;
         this.recipeRepository = recipeRepository;
     }
 
     @Override
-    @Transactional
     public void saveImageFile(String id, MultipartFile multipartFile) {
-        recipeRepository.findById(id).ifPresent(recipeCommand -> {
+        recipeRepository.findById(id).subscribe(recipe -> {
             try {
-                recipeCommand.setImage(convertToByteObjectsArray(multipartFile.getBytes()));
-                recipeRepository.save(recipeCommand);
+                recipe.setImage(convertToByteObjectsArray(multipartFile.getBytes()));
+                recipeRepository.save(recipe);
             } catch (IOException e) {
                 e.printStackTrace();
             }
