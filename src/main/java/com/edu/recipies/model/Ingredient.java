@@ -24,10 +24,8 @@ public class Ingredient {
     private String     description;
     private BigDecimal amount;
 
-    @DBRef
     private Recipe recipe;
 
-    @DBRef
     private UnitOfMeasure unitOfMeasure;
 
     public Ingredient(String description) {

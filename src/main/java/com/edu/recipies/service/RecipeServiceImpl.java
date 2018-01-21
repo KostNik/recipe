@@ -44,19 +44,23 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Mono<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand) {
-        Recipe recipe = commandToRecipe.convert(recipeCommand);
-        Mono<Recipe> saved = recipeRepository.save(recipe);
-        return saved.map(recipeToCommand::convert);
+        return recipeRepository.save(commandToRecipe.convert(recipeCommand))
+                .map(recipeToCommand::convert);
     }
 
     @Override
     public Mono<RecipeCommand> findCommandById(String id) {
-        return recipeRepository.findById(id).map(recipeToCommand::convert);
+        return recipeRepository.findById(id)
+                .map(recipe -> {
+                    RecipeCommand recipeCommand = recipeToCommand.convert(recipe);
+                    recipeCommand.getIngredients().forEach(i -> i.setRecipeId(id));
+                    return recipeCommand;
+                });
     }
 
     @Override
     public void deleteById(String id) {
-        recipeRepository.deleteById(id);
+        recipeRepository.deleteById(id).block();
     }
 
 }

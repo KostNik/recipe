@@ -17,6 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -83,12 +84,10 @@ public class RecipeServiceImplTest {
         recipes.add(recipe);
         when(recipeService.getRecipes()).thenReturn(Flux.fromIterable(recipes));
 
-        Set<Recipe> savedRecipes = ImmutableSet.copyOf(recipeService.getRecipes().toIterable());
+        List<Recipe> savedRecipes = recipeService.getRecipes().collectList().block();
         assertEquals(savedRecipes.size(), 1);
         verify(recipeRepository, times(1)).findAll();
     }
-
-    private final static String NEW_URL = "fake_url";
 
     @Test
     public void saveRecipeCommand() {
@@ -104,11 +103,21 @@ public class RecipeServiceImplTest {
 
     @Test
     public void findCommandById() {
+        Recipe recipe = new Recipe();
+        recipe.setId("ONE");
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId("ONE");
+
+        when(recipeRepository.findById(anyString())).thenReturn(Mono.just(recipe));
+        when(recipeToCommand.convert(any())).thenReturn(recipeCommand);
+        Mono<RecipeCommand> commandById = recipeService.findCommandById("ONE");
+        assertEquals("ONE", commandById.block().getId());
     }
 
     @Test
     public void testDeleteById() {
         String id = "3L";
+        when(recipeRepository.deleteById(anyString())).thenReturn(Mono.empty());
         recipeService.deleteById(id);
         verify(recipeRepository, times(1)).deleteById(anyString());
     }

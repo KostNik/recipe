@@ -51,9 +51,9 @@ public class IngredientServiceImpl implements IngredientService {
 
     private Mono<Ingredient> findIngredientByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
         return recipeRepository.findById(recipeId)
-                .flatMapMany(recipe -> Flux.fromIterable(recipe.getIngredients()))
-                .filter(i -> i.getId().equals(ingredientId))
-                .next();
+                .flatMapIterable(Recipe::getIngredients)
+                .filter(i -> i.getId().equalsIgnoreCase(ingredientId))
+                .single();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class IngredientServiceImpl implements IngredientService {
                 ingredient = commandToIngredientConverter.convert(ingredientCommand);
                 recipe.addIngredient(ingredient);
             }
-            recipeRepository.save(recipe);
+            recipeRepository.save(recipe).block();
             return Mono.just(ingredient).map(ingredientToCommandConverter::convert);
         }
     }
@@ -97,7 +97,13 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public Boolean deleteIngredient(String recipeId, String ingredientId) {
         try {
-            recipeRepository.findById(recipeId).subscribe(r -> r.getIngredients().removeIf(ingredient -> ingredient.getId().equals(ingredientId)));
+            recipeRepository.findById(recipeId).subscribe(r -> {
+                if (r.getIngredients().removeIf(ingredient -> ingredient.getId().equals(ingredientId))) {
+                    recipeRepository.save(r).block();
+                }
+            });
+
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();

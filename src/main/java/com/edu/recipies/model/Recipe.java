@@ -32,7 +32,6 @@ public class Recipe {
     private Difficulty difficulty;
     private Byte[]     image;
     private List<Ingredient> ingredients = new ArrayList<>();
-    @DBRef
     private Set<Category>    categories  = new HashSet<>();
     private Notes notes;
 

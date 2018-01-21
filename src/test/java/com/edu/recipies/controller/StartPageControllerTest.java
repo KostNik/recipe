@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static junit.framework.TestCase.assertEquals;
@@ -56,7 +57,7 @@ public class StartPageControllerTest {
         Recipe recipe = new Recipe();
         recipe.setId("1");
         recipes.add(recipe);
-        ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+        ArgumentCaptor<List<Recipe>> argumentCaptor = ArgumentCaptor.forClass(List.class);
 
         when(recipeService.getRecipes()).thenReturn(Flux.fromIterable(recipes));
 

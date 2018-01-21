@@ -113,15 +113,6 @@ public class RecipeControllerTest {
     }
 
     @Test
-    @Ignore
-    public void testBadNumberFormatException() throws Exception {
-        mockMvc.perform(get("/recipe/someString/show"))
-                .andExpect(status().isBadRequest())
-                .andExpect(model().attributeExists("exception"))
-                .andExpect(view().name("400error"));
-    }
-
-    @Test
     public void testDeleteRecipe() throws Exception {
         mockMvc.perform(get("/recipe/delete?id=" + 1L))
                 .andExpect(status().is3xxRedirection())
