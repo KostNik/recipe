@@ -19,6 +19,9 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <form th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.getRecipeId()} + '/ingredient'} ">
+                <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                    <p>Please Correct Errors Below</p>
+                </div>
                 <input type="hidden" th:field="*{id}"/>
                 <div class="pannel-group">
                     <div class="panel panel-primary">
@@ -33,11 +36,21 @@
                                     <label>Description:</label>
                                     <input type="text" required minlength="0" class="form-control"
                                            th:field="*{description}"/>
+                                    <span class="help-block" th:if="${#fields.hasErrors('description')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('description')}" th:text="${err}"/>
+                                        </ul>
+                                    </span>
                                 </div>
 
                                 <div class="col-md-3 form-group">
                                     <label>Amount:</label>
                                     <input type="number" min="0" class="form-control" th:field="*{amount}"/>
+                                    <span class="help-block" th:if="${#fields.hasErrors('amount')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('amount')}" th:text="${err}"/>
+                                        </ul>
+                                    </span>
                                 </div>
 
                                 <div class="col-md-3 form-group">
@@ -49,6 +62,12 @@
                                                 th:text="${uomEach.description}">Each
                                         </option>
                                     </select>
+
+                                    <span class="help-block" th:if="${#fields.hasErrors('unitOfMeasureCommand')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('unitOfMeasureCommand')}" th:text="${err}"/>
+                                        </ul>
+                                    </span>
                                 </div>
                             </div>
                         </div>

@@ -11,7 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.exceptions.TemplateInputException;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class RecipeController {
 
     @RequestMapping(value = "recipe/{id}/show", method = RequestMethod.GET)
     public String showRecipe(@PathVariable String id, Model model) {
-        Recipe recipe = recipeService.findById(id).block();
+        Mono<Recipe> recipe = recipeService.findById(id);
         model.addAttribute("recipe", recipe);
         return "recipe/show";
     }
@@ -74,12 +75,10 @@ public class RecipeController {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
-    public ModelAndView handleNotFound(Exception exception) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("exception", exception);
-        modelAndView.setViewName("404error");
-        return modelAndView;
+    @ExceptionHandler({NotFoundException.class, TemplateInputException.class})
+    public String handleNotFound(Exception exception, Model model) {
+        model.addAttribute("exception", exception);
+        return "404error";
     }
 
 }

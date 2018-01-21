@@ -19,7 +19,7 @@ public class StartPageController {
 
     @RequestMapping(value = {"/all", "/"}, method = RequestMethod.GET)
     public String getAllRecipes(Model model) {
-        model.addAttribute("recipes", recipeService.getRecipes().collectList().block());
+        model.addAttribute("recipes", recipeService.getRecipes());
         return "index";
     }
 
