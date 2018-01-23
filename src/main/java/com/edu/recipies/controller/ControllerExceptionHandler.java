@@ -15,6 +15,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(WebExchangeBindException.class)
     public String handleNumberFormat(Exception exception, Model model) {
         model.addAttribute("exception", exception);
+        exception.printStackTrace();
         return "400error";
     }
 

@@ -63,11 +63,7 @@ public class IngredientController {
     public String updateIngredientForm(@PathVariable String recipeId, @PathVariable(value = "ingredientId") String ingrId, Model model) {
 
         IngredientCommand ingredientCommand = ingredientService.findByRecipeIdAndIngredientId(recipeId, ingrId).blockOptional().orElse(new IngredientCommand());
-//        Flux<UnitOfMeasureCommand> unitOfMeasureCommands = populateUoms();
-
         model.addAttribute("ingredient", ingredientCommand);
-//        model.addAttribute("uoms", unitOfMeasureCommands);
-
         return "recipe/ingredient/ingredientform";
     }
 
@@ -79,16 +75,10 @@ public class IngredientController {
         if (!recipeOptional.isPresent()) {
 //            //todo need to handle it
         }
-//        Flux<UnitOfMeasureCommand> unitOfMeasureCommands = populateUoms();
-
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(recipeId);
         ingredientCommand.setUnitOfMeasureCommand(new UnitOfMeasureCommand());
-
-
         model.addAttribute("ingredient", ingredientCommand);
-//        model.addAttribute("uoms", unitOfMeasureCommands);
-
         return "recipe/ingredient/ingredientform";
     }
 
@@ -102,7 +92,6 @@ public class IngredientController {
         BindingResult bindingResult = webDataBinder.getBindingResult();
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(e -> log.info("ERROR {}", e));
-//            model.addAttribute("uoms", populateUoms());
             return "recipe/ingredient/ingredientform";
         }
         IngredientCommand command = ingredientService.saveOrUpdateIngredient(ingredientCommand).block();

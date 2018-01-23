@@ -3,19 +3,16 @@ package com.edu.recipies.controller;
 import com.edu.recipies.commands.RecipeCommand;
 import com.edu.recipies.exceptions.NotFoundException;
 import com.edu.recipies.model.Recipe;
+import com.edu.recipies.service.CategoryService;
 import com.edu.recipies.service.RecipeService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.ui.Model;
 import reactor.core.publisher.Mono;
-
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -35,13 +32,16 @@ public class RecipeControllerTest {
     @Mock
     private RecipeService recipeService;
 
+    @Mock
+    private CategoryService categoryService;
+
     private RecipeController recipeController;
     private MockMvc          mockMvc;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        recipeController = new RecipeController(recipeService);
+        recipeController = new RecipeController(recipeService, categoryService);
         mockMvc = MockMvcBuilders.standaloneSetup(recipeController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
